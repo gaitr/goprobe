@@ -25,8 +25,8 @@ var rootCmd = &cobra.Command{
 			cmd.Help()
 		} else {
 			url := args[0]
-			//request.DefaultResponse(request.Head(client, url), url)
-			request.CompleteHeadResponse(request.Head(client, url))
+			request.DefaultResponse(request.Head(client, url), url)
+			//request.CompleteHeadResponse(request.Head(client, url))
 		}
 		os.Exit(1)
 	},
