@@ -1,65 +1,37 @@
 package request
 
 import (
-	"fmt"
+	res "github.com/gaitr/goprobe/internal/response"
 	"net/http"
 	"time"
 )
 
-type HeadResponse struct {
-	statusCode    int
-	contentLength int64
-	lastModified  string
+type HeadRequest struct {
+	request Request
 }
 
-func Head(client http.Client, path string) HeadResponse {
+func (hr *HeadRequest) SendRequest(client http.Client, path string) res.Response {
 	response, err := client.Head(path)
-	headResponse := HeadResponse{}
-
+	hr.request.Type = "-HEAD"
+	headResponse := res.Response{}
+	headResponse.Path = path
 	if err == nil {
-		headResponse.statusCode = response.StatusCode
+		headResponse.StatusCode = response.StatusCode
 
 		conLength := response.Header.Get("Content-Length")
 		if conLength != "" {
-			headResponse.contentLength = response.ContentLength
+			headResponse.ContentLength = response.ContentLength
 		}
 
 		t, err := time.Parse(time.RFC1123, response.Header.Get("Last-Modified"))
 		if err == nil {
-			headResponse.lastModified = t.String()
+			headResponse.LastModified = t.String()
 		}
 	}
+
 	return headResponse
 }
 
-func CompleteHeadResponse(headResponse HeadResponse) {
-	statusCode := headResponse.statusCode
-	contentLength := headResponse.contentLength
-	lastModified := headResponse.lastModified
-	result := "Please provide a valid URL"
-
-	if statusCode != 0 {
-		result = fmt.Sprintf("Status Code: %d ", headResponse.statusCode)
-		if contentLength != 0 {
-			result += fmt.Sprintf("Content-Length: %d ", contentLength)
-		}
-
-		if lastModified != "" {
-			result += fmt.Sprintf("Last-Modified: %s", lastModified)
-		}
-	}
-	fmt.Println(result)
-}
-
-func DefaultResponse(headResponse HeadResponse, path string) {
-	statusCode := headResponse.statusCode
-	result := "Please provide a valid URL"
-
-	if statusCode != 0 {
-		result = fmt.Sprintf("Status Code: %d ", headResponse.statusCode)
-		if path != "" {
-			result += fmt.Sprintf(" URL: %s", path)
-		}
-	}
-	fmt.Println(result)
+func (hr *HeadRequest) PrintResponse(response res.Response) {
+	hr.request.PrintResponse(response)
 }
