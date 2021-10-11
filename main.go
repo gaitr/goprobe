@@ -1,20 +1,9 @@
 package main
 
 import (
-	"log"
-	"os"
+	"github.com/gaitr/goprobe/internal/cmd"
 )
 
-func init() {
-}
-
 func main() {
-
-	name, err := os.Hostname()
-	if err != nil {
-		os.Exit(-1)
-	}
-
-	log.Printf("(goprobe) Hello, %s!\n", name)
-
+	cmd.Execute()
 }
