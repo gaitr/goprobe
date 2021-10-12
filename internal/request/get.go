@@ -32,6 +32,6 @@ func (hr *GetRequest) SendRequest(client http.Client, path string) res.Response 
 	return getResponse
 }
 
-func (hr *GetRequest) PrintResponse(response res.Response) {
-	hr.request.PrintResponse(response)
+func (hr *GetRequest) PrintResponse(response res.Response) string {
+	return hr.request.PrintResponse(response)
 }

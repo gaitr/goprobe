@@ -8,7 +8,7 @@ import (
 
 type Process interface {
 	SendRequest(client http.Client, path string) res.Response
-	PrintResponse(response res.Response)
+	PrintResponse(response res.Response) string
 }
 
 type FlagPool struct {
@@ -19,7 +19,7 @@ type Request struct {
 	Type string
 }
 
-func (r *Request) PrintResponse(response res.Response) {
+func (r *Request) PrintResponse(response res.Response) string {
 	statusCode := response.StatusCode
 	contentLength := response.ContentLength
 	lastModified := response.LastModified
@@ -35,5 +35,5 @@ func (r *Request) PrintResponse(response res.Response) {
 			result += fmt.Sprintf("Last-Modified: %s", lastModified)
 		}
 	}
-	fmt.Println(r.Type, result, response.Path)
+	return r.Type + " " + result + " " + response.Path
 }
