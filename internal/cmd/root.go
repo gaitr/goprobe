@@ -33,11 +33,6 @@ func Execute() {
 
 func init() {
 	rootCmd.Flags().BoolVarP(&flagPool.IsGet, "get", "G", false, "to send get request")
-	rootCmd.Flags().StringVarP(
-		&flags.filepath,
-		flagsName.file,
-		flagsName.fileShort,
-		"", "path to the file")
 	rootCmd.PersistentFlags().BoolVarP(
 		&flags.verbose,
 		flagsName.verbose,
@@ -77,10 +72,8 @@ var flags struct {
 	verbose  bool
 }
 var flagsName = struct {
-	file, fileShort       string
 	verbose, verboseShort string
 }{
-	"file", "f",
 	"verbose", "v",
 }
 

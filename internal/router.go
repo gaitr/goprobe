@@ -15,7 +15,7 @@ func Router(client http.Client, path string, flagPool *request.FlagPool) error {
 	}
 
 	_, e := fmt.Fprintln(
-		os.Stdout, sendRequest.PrintResponse(sendRequest.SendRequest(client, path)))
+		os.Stdout, sendRequest.PrintResponse(client, path))
 
 	if e != nil {
 		return e

@@ -4,20 +4,19 @@ import (
 	"fmt"
 	res "github.com/gaitr/goprobe/internal/response"
 	"net/http"
+	"strconv"
 )
 
 type Process interface {
 	SendRequest(client http.Client, path string) res.Response
-	PrintResponse(response res.Response) string
+	PrintResponse(client http.Client, path string) string
 }
 
 type FlagPool struct {
 	IsGet bool
 }
 
-type Request struct {
-	Type string
-}
+type Request struct{}
 
 func (r *Request) PrintResponse(response res.Response) string {
 	statusCode := response.StatusCode
@@ -26,14 +25,14 @@ func (r *Request) PrintResponse(response res.Response) string {
 	result := "Please provide a valid URL"
 
 	if statusCode != 0 {
-		result = fmt.Sprintf("Status Code: %d ", response.StatusCode)
+		result = strconv.Itoa(statusCode)
 		if contentLength != 0 {
-			result += fmt.Sprintf("Content-Length: %d ", contentLength)
+			result += fmt.Sprintf(" Content-Length: %d ", contentLength)
 		}
 
 		if lastModified != "" {
-			result += fmt.Sprintf("Last-Modified: %s", lastModified)
+			result += fmt.Sprintf(" Last-Modified: %s", lastModified)
 		}
 	}
-	return r.Type + " " + result + " " + response.Path
+	return result + " " + response.Path
 }
