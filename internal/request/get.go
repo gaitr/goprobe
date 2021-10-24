@@ -12,7 +12,6 @@ type GetRequest struct {
 
 func (hr *GetRequest) SendRequest(client http.Client, path string) res.Response {
 	response, err := client.Get(path)
-	hr.request.Type = "-GET"
 	getResponse := res.Response{}
 	getResponse.Path = path
 	if err == nil {
@@ -32,6 +31,7 @@ func (hr *GetRequest) SendRequest(client http.Client, path string) res.Response 
 	return getResponse
 }
 
-func (hr *GetRequest) PrintResponse(response res.Response) {
-	hr.request.PrintResponse(response)
+func (hr *GetRequest) PrintResponse(client http.Client, path string) string {
+	response := hr.SendRequest(client, path)
+	return hr.request.PrintResponse(response)
 }

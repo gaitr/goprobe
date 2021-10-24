@@ -12,7 +12,6 @@ type HeadRequest struct {
 
 func (hr *HeadRequest) SendRequest(client http.Client, path string) res.Response {
 	response, err := client.Head(path)
-	hr.request.Type = "-HEAD"
 	headResponse := res.Response{}
 	headResponse.Path = path
 	if err == nil {
@@ -32,6 +31,7 @@ func (hr *HeadRequest) SendRequest(client http.Client, path string) res.Response
 	return headResponse
 }
 
-func (hr *HeadRequest) PrintResponse(response res.Response) {
-	hr.request.PrintResponse(response)
+func (hr *HeadRequest) PrintResponse(client http.Client, path string) string {
+	response := hr.SendRequest(client, path)
+	return hr.request.PrintResponse(response)
 }
