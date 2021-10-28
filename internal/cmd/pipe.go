@@ -3,7 +3,9 @@ package cmd
 import (
 	"bufio"
 	"errors"
+	"fmt"
 	"github.com/gaitr/goprobe/internal"
+	"github.com/gaitr/goprobe/internal/logger"
 	"github.com/gaitr/goprobe/internal/util"
 	"os"
 )
@@ -21,7 +23,9 @@ func fileRead() error {
 func scanList(input *os.File) error {
 	scanner := bufio.NewScanner(bufio.NewReader(input))
 	for scanner.Scan() {
-		e := internal.Router(client, scanner.Text(), &flagPool)
+		url := scanner.Text()
+		logger.ProbeLog.Write(logger.INFO1, fmt.Sprintf("Reading Path %s fetching...", url))
+		e := internal.Router(client, url, &flagPool)
 		if e != nil {
 			return e
 		}

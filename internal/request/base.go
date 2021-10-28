@@ -13,7 +13,8 @@ type Process interface {
 }
 
 type FlagPool struct {
-	IsGet bool
+	IsGet        bool
+	VerboseLevel int
 }
 
 type Request struct{}
@@ -34,5 +35,6 @@ func (r *Request) PrintResponse(response res.Response) string {
 			result += fmt.Sprintf(" Last-Modified: %s", lastModified)
 		}
 	}
+
 	return result + " " + response.Path
 }
