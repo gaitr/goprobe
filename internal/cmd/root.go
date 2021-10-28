@@ -2,7 +2,9 @@ package cmd
 
 import (
 	"errors"
+	"fmt"
 	"github.com/gaitr/goprobe/internal"
+	"github.com/gaitr/goprobe/internal/logger"
 	"github.com/gaitr/goprobe/internal/request"
 	"github.com/spf13/cobra"
 	"log"
@@ -19,6 +21,7 @@ var rootCmd = &cobra.Command{
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	RunE: func(cmd *cobra.Command, args []string) error {
+		logger.ProbeLog.SetLevel(flagPool.VerboseLevel)
 		err := runCommand(client, args)
 		if errors.Is(err, notFoundCommand) {
 			cmd.Help()
@@ -33,14 +36,11 @@ func Execute() {
 
 func init() {
 	rootCmd.Flags().BoolVarP(&flagPool.IsGet, "get", "G", false, "to send get request")
-	rootCmd.PersistentFlags().BoolVarP(
-		&flags.verbose,
-		flagsName.verbose,
-		flagsName.verboseShort,
-		false, "log verbose output")
+	rootCmd.Flags().CountVarP(&flagPool.VerboseLevel, "verbose", "v", "log verbose output")
 }
 
 func runCommand(client http.Client, args []string) error {
+	logger.ProbeLog.Write(logger.INFO, fmt.Sprintf("goprobe is running..."))
 	print = logNoop
 	if flags.verbose {
 		print = logOut
@@ -53,6 +53,7 @@ func runCommand(client http.Client, args []string) error {
 	} else if flags.filepath != "" {
 		return fileRead()
 	} else {
+		logger.ProbeLog.Write(logger.WARNING, notFoundCommand)
 		return notFoundCommand
 	}
 }
@@ -70,11 +71,6 @@ var flagPool request.FlagPool
 var flags struct {
 	filepath string
 	verbose  bool
-}
-var flagsName = struct {
-	verbose, verboseShort string
-}{
-	"verbose", "v",
 }
 
 var print func(s string)
